@@ -1,0 +1,86 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+
+# Ensure output directories exist
+os.makedirs("results/plots", exist_ok=True)
+os.makedirs("results/tables", exist_ok=True)
+
+# --------- LOAD METRICS ----------
+# Update filenames if needed
+metrics = np.load("data/eval_metrics.npz", allow_pickle=True)
+
+fidelity = metrics["fidelity"]
+trace_distance = metrics["trace_distance"]
+epochs = np.arange(1, len(fidelity) + 1)
+
+# --------- PLOT 1: Fidelity vs Epoch ----------
+plt.figure()
+plt.plot(epochs, fidelity)
+plt.xlabel("Epoch")
+plt.ylabel("Fidelity")
+plt.title("Fidelity vs Epoch")
+plt.savefig("results/plots/fidelity_vs_epoch.png")
+plt.close()
+
+# --------- PLOT 2: Trace Distance vs Epoch ----------
+plt.figure()
+plt.plot(epochs, trace_distance)
+plt.xlabel("Epoch")
+plt.ylabel("Trace Distance")
+plt.title("Trace Distance vs Epoch")
+plt.savefig("results/plots/trace_distance_vs_epoch.png")
+plt.close()
+
+# --------- SAVE SUMMARY TABLE ----------
+mean_fid = np.mean(fidelity)
+mean_td = np.mean(trace_distance)
+
+with open("results/tables/results_summary.tex", "w") as f:
+    f.write(r"""
+\\begin{table}[h]
+\\centering
+\\begin{tabular}{|c|c|}
+\\hline
+Metric & Value \\\\
+\\hline
+Mean Fidelity & %.4f \\\\
+Mean Trace Distance & %.4f \\\\
+\\hline
+\\end{tabular}
+\\caption{Evaluation Metrics Summary}
+\\end{table}
+""" % (mean_fid, mean_td))
+
+nano src/plot_runtime.py
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+
+os.makedirs("results/plots", exist_ok=True)
+
+# Example values – replace with your actual ones from Assignment 4
+system_size = np.array([2, 3, 4, 5])
+runtime = np.array([0.4, 1.2, 3.8, 9.5])
+
+plt.figure()
+plt.plot(system_size, runtime, marker="o")
+plt.xlabel("System Size (Qubits)")
+plt.ylabel("Runtime (seconds)")
+plt.title("Runtime Scaling with System Size")
+plt.savefig("results/plots/runtime_scaling.png")
+plt.close()
+
+
+
+python src/plot_results.py
+python src/plot_runtime.py
+
+ls results/plots
+ls results/tables
+
+^X
+
+
+
+
